@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-
 const authorizedUsers = process.env.OWNERS_BOT.split(",");
 
 module.exports = {

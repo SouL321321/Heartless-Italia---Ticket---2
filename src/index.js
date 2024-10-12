@@ -17,6 +17,7 @@ const client = new Client({
     IntentsBitField.Flags.AutoModerationExecution,
     IntentsBitField.Flags.GuildModeration,
     IntentsBitField.Flags.AutoModerationConfiguration,
+    IntentsBitField.Flags.GuildEmojisAndStickers
   ],
   partials: [Partials.Channel],
   debug: true,
