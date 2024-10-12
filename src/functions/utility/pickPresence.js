@@ -11,7 +11,7 @@ module.exports = (client) => {
             // },
             {
                 type: ActivityType.Watching,
-                text: `ʜᴇᴀʀᴛʟᴇꜱꜱ ɪᴛᴀʟɪᴀ`,
+                text: `ʜᴇᴀʀᴛʟᴇꜱꜱ ɪᴛᴀʟɪᴀ - ᴛɪᴄᴋᴇᴛ`,
                 status: "online",
             },
             // {

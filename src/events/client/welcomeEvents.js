@@ -24,24 +24,24 @@ module.exports = {
             "✨❤"
         )
         .setDescription(
-          "Sono qui per aiutare al meglio la gestione della moderazione, spero di non deludere.🐧✨⭐"
+          "Sono qui per aiutare al meglio per la _gestione_ dei *ticket*, spero di non deludervi.🐧✨⭐"
         )
         .setColor("LuminousVividPink")
         .setThumbnail(client.user.displayAvatarURL())
         .addFields(
           {
-            name: "🚀 Per Iniziare",
-            value: "Scrivi `/help` per vedere tutti i miei comandi.",
+            name: "🎫 Supporto",
+            value: "Se hai bisogno di `Supporto`.",
             inline: false,
           },
           {
-            name: "📳 Moderazione",
-            value: "Concentrati, modera, ma con divertimento e stile. 👀",
+            name: "⚕️ High Staff",
+            value: "Se hai bisogno degli **High Staffers**.",
             inline: false,
           },
           {
-            name: "🔧 Tools",
-            value: "Usa `/server` per vedere una panoramica completa del server. 🎇",
+            name: "📰 Partnership",
+            value: "Sei qui per fare `partnership?` ",
             inline: false,
           }
         )
