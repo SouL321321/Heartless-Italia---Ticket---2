@@ -54,5 +54,3 @@ client.on("guildCreate", (guild) => {
 
 
 client.login(process.env.TOKEN);
-
-//test
