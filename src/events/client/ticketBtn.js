@@ -139,7 +139,7 @@ async function createTicket(interaction, type, details = "") {
   const config = await configSchema.findOne({ guildID: interaction.guild.id });
   const ticketId = interaction.user.username;
 
-  // Definisci un ruolo per ogni tipo di ticket
+
   let roleToTag;
   switch (type) {
     case "Supporto":
@@ -249,8 +249,8 @@ async function createTicket(interaction, type, details = "") {
     embeds: [embed],
     components: [buttonRows],
     allowedMentions: {
-      parse: ["roles"], // Nessun parsing automatico di utenti o ruoli
-      roles: [roleToTag], // Specifica che vuoi pingare questo ruolo
+      parse: ["roles"],
+      roles: [roleToTag],
     },
   });
 
@@ -270,6 +270,8 @@ function modalBuilder(title, id, components) {
 }
 
 async function handleClaim(interaction) {
+  await interaction.deferReply({ ephemeral: true });
+
   const ticketId = interaction.customId.split("-")[1];
   const ticket = await ticketSchema.findOne({
     guildId: interaction.guild.id,
@@ -278,20 +280,19 @@ async function handleClaim(interaction) {
   });
 
   if (!ticket) {
-    return interaction.reply({
+    return interaction.followUp({
       content: "Ticket già rivendicato o non trovato! 🙅‍♂️",
       ephemeral: true,
     });
   }
 
   if (ticket.userId === interaction.user.id) {
-    return interaction.reply({
+    return interaction.followUp({
       content: "Non puoi rivendicare un ticket che hai aperto tu! 🚫",
       ephemeral: true,
     });
   }
 
-  // Ruolo specifico per il tipo di ticket
   let roleToTag;
   switch (ticket.type) {
     case "Supporto":
@@ -314,9 +315,8 @@ async function handleClaim(interaction) {
       break;
   }
 
-  // Controlla se l'utente ha il ruolo corrispondente
   if (!interaction.member.roles.cache.has(roleToTag)) {
-    return interaction.reply({
+    return interaction.followUp({
       content: "Non hai il permesso per rivendicare questo tipo di ticket! 🙅‍♂️",
       ephemeral: true,
     });
@@ -326,7 +326,6 @@ async function handleClaim(interaction) {
   ticket.claimed = true;
   await ticket.save();
 
-  // Aggiorna i permessi per permettere solo al rivendicatore e all'utente di scrivere
   await interaction.channel.permissionOverwrites.set([
     {
       id: interaction.guild.roles.everyone,
@@ -354,13 +353,16 @@ async function handleClaim(interaction) {
     .setColor("Green");
 
   await interaction.channel.send({ embeds: [claimEmbed] });
-  interaction.reply({
+  interaction.followUp({
     content: "Ticket rivendicato con successo! ✅",
     ephemeral: true,
   });
 }
 
+
 async function handleClose(interaction) {
+  await interaction.deferReply({ ephemeral: true });
+
   const ticketId = interaction.customId.split("-")[1];
   const ticket = await ticketSchema.findOne({
     guildId: interaction.guild.id,
@@ -369,20 +371,19 @@ async function handleClose(interaction) {
   const config = await configSchema.findOne({ guildID: interaction.guild.id });
 
   if (!ticket) {
-    return interaction.reply({
+    return interaction.followUp({
       content: "Ticket non trovato! 📩",
       ephemeral: true,
     });
   }
 
   if (ticket.userId === interaction.user.id) {
-    return interaction.reply({
+    return interaction.followUp({
       content: "Non puoi chiudere un ticket che hai aperto tu! 🚫",
       ephemeral: true,
     });
   }
 
-  // Define roleToTag based on the ticket type
   let roleToTag;
   switch (ticket.type) {
     case "Supporto":
@@ -444,10 +445,10 @@ async function handleClose(interaction) {
 
   collector.on("collect", async (i) => {
     if (i.customId === `confirmCloseTicket-${ticketId}`) {
-      await i.reply({
-        content: "Ticket chiuso con successo! ✅",
-        ephemeral: true,
-      });
+        interaction.followUp({
+    content: "Ticket chiuso con successo! 🔐",
+    ephemeral: true,
+  });
 
       const closeEmbed = new EmbedBuilder()
         .setTitle("Ticket Chiuso")
@@ -457,7 +458,6 @@ async function handleClose(interaction) {
         .setColor("Red");
 
       if (ticketChannel) {
-        // Verifica se il canale esiste ancora
         await ticketChannel.send({ embeds: [closeEmbed] });
 
         await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -473,7 +473,7 @@ async function handleClose(interaction) {
         });
 
         try {
-          await ticketChannel.delete(); // Assicurati di eliminare il canale dopo la modifica
+          await ticketChannel.delete();
         } catch (error) {
           console.error("Errore durante l'eliminazione del canale:", error);
         }
