@@ -255,8 +255,8 @@ async function createTicket(interaction, type, details = "") {
   });
 
   await ticketChannel.send(`<@&${roleToTag}>`);
-
-  interaction.reply({
+  
+  interaction.editReply({
     content: `Il tuo Ticket è stato creato: ${ticketChannel}`,
     ephemeral: true,
   });
@@ -353,7 +353,7 @@ async function handleClaim(interaction) {
     .setColor("Green");
 
   await interaction.channel.send({ embeds: [claimEmbed] });
-  interaction.followUp({
+  interaction.editReply({
     content: "Ticket rivendicato con successo! ✅",
     ephemeral: true,
   });
@@ -371,14 +371,14 @@ async function handleClose(interaction) {
   const config = await configSchema.findOne({ guildID: interaction.guild.id });
 
   if (!ticket) {
-    return interaction.followUp({
+    return interaction.editReply({
       content: "Ticket non trovato! 📩",
       ephemeral: true,
     });
   }
 
   if (ticket.userId === interaction.user.id) {
-    return interaction.followUp({
+    return interaction.editReply({
       content: "Non puoi chiudere un ticket che hai aperto tu! 🚫",
       ephemeral: true,
     });
