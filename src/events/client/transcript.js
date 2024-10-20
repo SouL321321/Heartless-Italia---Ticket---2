@@ -40,16 +40,17 @@ async function makeTransFile(channelId, i) {
     `transcript_${channelId}.html`
   );
   fs.writeFileSync(transcriptFilePath, trans.attachment.toString());
-  `Transcript per il canale ${channelId} creato.`;
+  `Transcript per il canale ${channelId} creato.`; 
 
-  const publicTranscriptPath = path.join(
-    publicDir,
-    `transcript_${channelId}.html`
-  );
-  fs.copyFileSync(transcriptFilePath, publicTranscriptPath);
+  if (!fs.existsSync(transcriptFilePath)) {
+    console.error(`Transcript non trovato: ${transcriptFilePath}`);
+    return;
+  }
+
+  const projectDir = path.join(__dirname, "../../..");
 
   exec(
-    `git -C ${__dirname} add transcripts/ && git -C ${__dirname} commit -m "Aggiornamento dei transcript" && git -C ${__dirname} push`,
+    `git -C "${projectDir}" add -f "${transcriptFilePath}" && git -C "${projectDir}" commit -m "Aggiornamento dei transcript" && git -C "${projectDir}" push`,
     (err, stdout, stderr) => {
       if (err) {
         console.error(`Errore durante il push: ${stderr}`);

@@ -15,9 +15,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+    - name: List Transcripts
+      run: |
+        ls transcripts/  # Elenca i file nella cartella transcripts per il debug
+
     - name: Copy Transcripts
       run: |
-        cp -r transcripts/* public/  # Copia i transcript nella cartella pubblica per GitHub Pages
+        cp -r transcripts/* ./  # Copia i transcript nella root del progetto
 
     - name: Configure Git
       run: |
@@ -26,6 +30,6 @@ jobs:
 
     - name: Commit and Push
       run: |
-        git add public/
+        git add .  # Aggiungi tutti i file
         git commit -m "Aggiornamento dei transcript" || echo "Nessun cambiamento da caricare"
         git push

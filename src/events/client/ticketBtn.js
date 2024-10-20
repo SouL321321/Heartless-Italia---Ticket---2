@@ -136,9 +136,9 @@ module.exports = {
 };
 
 async function createTicket(interaction, type, details = "") {
+  await interaction.deferReply({ ephemeral: true });
   const config = await configSchema.findOne({ guildID: interaction.guild.id });
   const ticketId = interaction.user.username;
-
 
   let roleToTag;
   switch (type) {
@@ -255,7 +255,7 @@ async function createTicket(interaction, type, details = "") {
   });
 
   await ticketChannel.send(`<@&${roleToTag}>`);
-  
+
   interaction.editReply({
     content: `Il tuo Ticket è stato creato: ${ticketChannel}`,
     ephemeral: true,
@@ -359,7 +359,6 @@ async function handleClaim(interaction) {
   });
 }
 
-
 async function handleClose(interaction) {
   await interaction.deferReply({ ephemeral: true });
 
@@ -407,7 +406,7 @@ async function handleClose(interaction) {
   }
 
   if (!interaction.member.roles.cache.has(roleToTag)) {
-    return interaction.reply({
+    return interaction.editReply({
       content: "Non hai il permesso per chiudere questo tipo di ticket! 🙅‍♂️",
       ephemeral: true,
     });
@@ -415,7 +414,7 @@ async function handleClose(interaction) {
 
   const ticketChannel = interaction.guild.channels.cache.get(ticket.channelId);
   if (!ticketChannel) {
-    return interaction.reply({
+    return interaction.editReply({
       content: "Canale Ticket non trovato! 🔍",
       ephemeral: true,
     });
@@ -429,7 +428,7 @@ async function handleClose(interaction) {
       .setStyle("4")
   );
 
-  await interaction.reply({
+  await interaction.editReply({
     content: "Sei sicuro/a di voler chiudere il Ticket? 🚨",
     components: [confirmRow],
     ephemeral: true,
@@ -445,10 +444,10 @@ async function handleClose(interaction) {
 
   collector.on("collect", async (i) => {
     if (i.customId === `confirmCloseTicket-${ticketId}`) {
-        interaction.followUp({
-    content: "Ticket chiuso con successo! 🔐",
-    ephemeral: true,
-  });
+      await interaction.followUp({
+        content: "Ticket chiuso con successo! 🔐",
+        ephemeral: true,
+      });
 
       const closeEmbed = new EmbedBuilder()
         .setTitle("Ticket Chiuso")
@@ -498,7 +497,9 @@ async function handleClose(interaction) {
         new ButtonBuilder()
           .setLabel("🔍 Vedi Transcript")
           .setStyle(ButtonStyle.Link)
-          .setURL(`http://localhost:3000/ticket/${ticket.channelId}`)
+          .setURL(
+            `https://soul321321.github.io/Heartless-Italia---Ticket---2/transcripts/transcript_${ticket.channelId}.html`
+          )
       );
 
       const channel = interaction.guild.channels.cache.get(
@@ -519,4 +520,3 @@ async function handleClose(interaction) {
     }
   });
 }
-

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node .",
     "dev": "node .",
-    "start": "node ."
+    "start": "node .",
+    "build": "node generateTranscripts.js"
   },
   "keywords": [],
   "author": "",

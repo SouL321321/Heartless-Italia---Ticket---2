@@ -1,1 +1,3 @@
 .env
+.github/workflows
+/src/commands/Private/
