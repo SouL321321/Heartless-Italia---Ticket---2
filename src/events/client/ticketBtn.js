@@ -498,7 +498,7 @@ async function handleClose(interaction) {
           .setLabel("🔍 Vedi Transcript")
           .setStyle(ButtonStyle.Link)
           .setURL(
-            `https://soul321321.github.io/Heartless-Italia---Ticket---2/transcripts/transcript_${ticket.channelId}.html`
+            `http://localhost:3000/ticket/${ticket.channelId}`
           )
       );
 
