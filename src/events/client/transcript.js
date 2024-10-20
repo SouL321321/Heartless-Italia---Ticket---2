@@ -2,6 +2,7 @@ const discordTranscripts = require("discord-html-transcripts");
 const { Events } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
+const { exec } = require("child_process");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -34,4 +35,12 @@ async function makeTransFile(channelId, i) {
   );
   fs.writeFileSync(transcriptFilePath, trans.attachment.toString());
   `Transcript per il canale ${channelId} creato.`;
+g
+  exec(`git -C ${__dirname} add transcripts/ && git -C ${__dirname} commit -m "Aggiornamento dei transcript" && git -C ${__dirname} push`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(`Errore durante il push: ${stderr}`);
+      return;
+    }
+    console.log(`Successo: ${stdout}`);
+  });
 }
