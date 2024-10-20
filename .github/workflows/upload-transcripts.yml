@@ -1,0 +1,31 @@
+name: Upload Transcripts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - transcripts/**  # Monitora la cartella transcripts per i cambiamenti
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Copy Transcripts
+      run: |
+        cp -r transcripts/* public/  # Copia i transcript nella cartella pubblica per GitHub Pages
+
+    - name: Configure Git
+      run: |
+        git config --local user.name "SouL321321"
+        git config --local user.email "battleofcod@gmail.com"
+
+    - name: Commit and Push
+      run: |
+        git add public/
+        git commit -m "Aggiornamento dei transcript" || echo "Nessun cambiamento da caricare"
+        git push
