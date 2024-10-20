@@ -24,23 +24,38 @@ async function makeTransFile(channelId, i) {
   `Creando il Transcript per il canale ${channelId}`;
   const trans = await discordTranscripts.createTranscript(channel);
 
-  if (!fs.existsSync(path.join(__dirname, "transcripts"))) {
-    fs.mkdirSync(path.join(__dirname, "transcripts"));
+  const transcriptsDir = path.join(__dirname, "transcripts");
+  const publicDir = path.join(__dirname, "public");
+
+  if (!fs.existsSync(transcriptsDir)) {
+    fs.mkdirSync(transcriptsDir);
+  }
+
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir);
   }
 
   const transcriptFilePath = path.join(
-    __dirname,
-    "transcripts",
+    transcriptsDir,
     `transcript_${channelId}.html`
   );
   fs.writeFileSync(transcriptFilePath, trans.attachment.toString());
   `Transcript per il canale ${channelId} creato.`;
-g
-  exec(`git -C ${__dirname} add transcripts/ && git -C ${__dirname} commit -m "Aggiornamento dei transcript" && git -C ${__dirname} push`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Errore durante il push: ${stderr}`);
-      return;
+
+  const publicTranscriptPath = path.join(
+    publicDir,
+    `transcript_${channelId}.html`
+  );
+  fs.copyFileSync(transcriptFilePath, publicTranscriptPath);
+
+  exec(
+    `git -C ${__dirname} add transcripts/ && git -C ${__dirname} commit -m "Aggiornamento dei transcript" && git -C ${__dirname} push`,
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error(`Errore durante il push: ${stderr}`);
+        return;
+      }
+      console.log(`Successo: ${stdout}`);
     }
-    console.log(`Successo: ${stdout}`);
-  });
+  );
 }

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - transcripts/**  # Monitora la cartella transcripts per i cambiamenti
+      - transcripts/**
 
 jobs:
   upload:
